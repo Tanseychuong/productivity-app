@@ -1,0 +1,54 @@
+{% extends "planner/base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Tasks</h2>
+    <div>
+        <a href="{% url 'task_today' %}" class="btn btn-outline-secondary">Today</a>
+        <a href="{% url 'task_add' %}" class="btn btn-primary">Add task</a>
+    </div>
+</div>
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th>Task</th>
+            <th>Due</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for t in tasks %}
+        <tr>
+            <td>
+                <strong {% if t.completed %}class="text-decoration-line-through text-muted" {% endif %}>{{ t.name
+                    }}</strong>
+                {% if t.description %}<div class="small text-muted">{{ t.description }}</div>{% endif %}
+            </td>
+            <td>{{ t.due_date|date:"j M Y"|default:"-" }}</td>
+            <td>
+                {% if t.completed %}<span class="badge bg-success">Done</span>
+                {% else %}<span class="badge bg-warning text-dark">Pending</span>{% endif %}
+            </td>
+            <td class="text-end">
+                {% if not t.completed %}
+                <form method="post" action="{% url 'task_complete' t.pk %}" class="d-inline">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-success">Complete</button>
+                </form>
+                {% endif %}
+                <a href="{% url 'task_edit' t.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+                <form method="post" action="{% url 'task_delete' t.pk %}" class="d-inline"
+                    onsubmit="return confirm('Delete this task?')">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" class="text-muted">No tasks yet.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
