@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Notes</h2>
+    <a href="{% url 'note_add' %}" class="btn btn-primary">Add note</a>
+</div>
+<form method="get" class="mb-3 d-flex gap-2">
+    <input type="date" name="date" value="{{ date_filter }}" class="form-control" style="max-width: 220px;">
+    <button class="btn btn-outline-secondary">Filter by date</button>
+    {% if date_filter %}<a href="{% url 'note_list' %}" class="btn btn-link">Clear</a>{% endif %}
+</form>
+{% for n in notes %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title">{{ n.title }}</h5>
+            <small class="text-muted">{{ n.date|date:"D, j M Y" }}</small>
+        </div>
+        <div class="card-text">{{ n.content|linebreaks }}</div>
+        <a href="{% url 'note_edit' n.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+        <form method="post" action="{% url 'note_delete' n.pk %}" class="d-inline"
+            onsubmit="return confirm('Delete this note?')">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">No notes found.</p>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="d-flex justify-content-between mb-3">
+    <h2>Journal</h2>
+    <a href="{% url 'journal_add' %}" class="btn btn-primary">New entry</a>
+</div>
+{% for j in journals %}
+<div class="card mb-3">
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <h5 class="card-title">{{ j.title }}</h5>
+            <small class="text-muted">{{ j.entry_date|date:"D, j M Y" }}</small>
+        </div>
+        <div class="card-text">{{ j.content|linebreaks }}</div>
+        <a href="{% url 'journal_edit' j.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+        <form method="post" action="{% url 'journal_delete' j.pk %}" class="d-inline"
+            onsubmit="return confirm('Delete this journal entry?')">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-outline-danger">Delete</button>
+        </form>
+    </div>
+</div>
+{% empty %}
+<p class="text-muted">No journal entries yet.</p>
+{% endfor %}
+{% endblock %}
