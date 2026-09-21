@@ -7,7 +7,10 @@ from django.db import transaction
 from django.utils import timezone
 from django.utils.dateparse import parse_date
 
-from planner.models import Contact, Journal, Note, Task
+from apps.contacts.models import Contact
+from apps.journals.models import Journal
+from apps.notes.models import Note
+from apps.tasks.models import Task
 
 
 def pick(item, *keys, default=""):
