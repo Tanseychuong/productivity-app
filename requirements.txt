@@ -1,0 +1,7 @@
+Django
+dj-database-url
+whitenoise
+gunicorn
+PyMySQL
+cryptography
+python-dotenv
