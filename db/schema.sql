@@ -1,41 +1,17 @@
--- db/schema.sql : baseline schema (MySQL 8 / MariaDB)
--- Run as root:  mysql -u root -p < db/schema.sql
-
-CREATE DATABASE IF NOT EXISTS productivity
-  CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
-USE productivity;
-
-CREATE TABLE IF NOT EXISTS contacts_contact (
-  id          BIGINT       NOT NULL AUTO_INCREMENT,
-  first_name  VARCHAR(100) NOT NULL,
-  last_name   VARCHAR(100) NOT NULL,
-  phone       VARCHAR(30)  NOT NULL,
-  email       VARCHAR(254) NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS journals_journal (
-  id          BIGINT       NOT NULL AUTO_INCREMENT,
-  title       VARCHAR(200) NOT NULL,
-  content     LONGTEXT     NOT NULL,
-  entry_date  DATE         NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS notes_note (
-  id       BIGINT       NOT NULL AUTO_INCREMENT,
-  title    VARCHAR(200) NOT NULL,
-  content  LONGTEXT     NOT NULL,
-  date     DATE         NOT NULL,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS tasks_task (
-  id           BIGINT       NOT NULL AUTO_INCREMENT,
-  name         VARCHAR(200) NOT NULL,
-  description  LONGTEXT     NOT NULL,
-  due_date     DATE         NULL,
-  completed    TINYINT(1)   NOT NULL DEFAULT 0,
-  PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+]633;E;{ echo "-- Baseline schema generated from Django migrations (MySQL)"\x3b for a in contacts journals notes tasks\x3b do python manage.py sqlmigrate $a 0001\x3b done\x3b } > db/schema.sql;1e7e88f8-72f5-4fc7-adaf-2ea6c0453c35]633;C-- Baseline schema generated from Django migrations (MySQL)
+--
+-- Create model Contact
+--
+CREATE TABLE `contacts_contact` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `first_name` varchar(100) NOT NULL, `last_name` varchar(100) NOT NULL, `phone` varchar(30) NOT NULL, `email` varchar(254) NOT NULL);
+--
+-- Create model Journal
+--
+CREATE TABLE `journals_journal` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `title` varchar(200) NOT NULL, `content` longtext NOT NULL, `entry_date` date NOT NULL);
+--
+-- Create model Note
+--
+CREATE TABLE `notes_note` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `title` varchar(200) NOT NULL, `content` longtext NOT NULL, `date` date NOT NULL);
+--
+-- Create model Task
+--
+CREATE TABLE `tasks_task` (`id` bigint AUTO_INCREMENT NOT NULL PRIMARY KEY, `name` varchar(200) NOT NULL, `description` longtext NOT NULL, `due_date` date NULL, `completed` bool NOT NULL);
