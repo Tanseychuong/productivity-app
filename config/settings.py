@@ -59,13 +59,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-# SQLite unless DATABASE_URL is set (e.g. mysql://user:pass@127.0.0.1:3306/productivity)
-DATABASES = {
-    "default": dj_database_url.config(
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600,
-    )
-}
+if os.environ.get("DATABASE_URL"):
+    # A full URL wins, e.g. the one a cloud host provides
+    DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
+elif os.environ.get("DB_NAME"):
+    # Individual variables (local MySQL)
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.mysql",
+            "NAME": os.environ["DB_NAME"],
+            "USER": os.environ.get("DB_USER", ""),
+            "PASSWORD": os.environ.get("DB_PASSWORD", ""),
+            "HOST": os.environ.get("DB_HOST", "127.0.0.1"),
+            "PORT": os.environ.get("DB_PORT", "3306"),
+            "CONN_MAX_AGE": 600,
+        }
+    }
+else:
+    # Nothing configured: fall back to a local SQLite file
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 if DATABASES["default"]["ENGINE"] == "django.db.backends.mysql":
     options = DATABASES["default"].setdefault("OPTIONS", {})
